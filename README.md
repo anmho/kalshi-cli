@@ -7,6 +7,7 @@ Official references:
 - Kalshi docs: <https://docs.kalshi.com/>
 - TypeScript SDK quickstart: <https://docs.kalshi.com/sdks/typescript/quickstart>
 - API keys/auth: <https://docs.kalshi.com/getting_started/api_keys>
+- Hosted CLI docs (Docusaurus): <https://anmho.github.io/kalshi-cli/>
 
 ## Install
 
@@ -141,6 +142,11 @@ Build docs:
 ```bash
 bun run docs:build
 ```
+
+Deploy docs:
+
+- GitHub Actions workflow: `.github/workflows/docs-pages.yml`
+- Published URL: <https://anmho.github.io/kalshi-cli/>
 
 ## Validation
 
