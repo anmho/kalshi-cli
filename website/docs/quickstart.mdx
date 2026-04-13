@@ -1,0 +1,64 @@
+---
+title: Quickstart
+---
+
+## Install
+
+```bash
+bun install
+bun run build
+```
+
+Optional system install:
+
+```bash
+bun run install:system
+kalshi --help
+```
+
+## Local Auth Setup (`.env`)
+
+Create `.env` from `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Required for private endpoints:
+
+```bash
+KALSHI_API_KEY_ID=...
+KALSHI_PRIVATE_KEY_PATH=/absolute/path/to/private-key.pem
+```
+
+Optional:
+
+```bash
+KALSHI_BASE_URL=https://api.elections.kalshi.com/trade-api/v2
+KALSHI_TIMEOUT_MS=10000
+```
+
+## First Commands
+
+Public:
+
+```bash
+kalshi ping
+kalshi markets list --limit 10
+```
+
+Private:
+
+```bash
+kalshi account limits
+kalshi portfolio balance
+kalshi orders list --limit 20
+```
+
+## Output Modes
+
+```bash
+kalshi markets list --limit 5
+kalshi markets list --limit 5 -o wide
+kalshi markets list --limit 5 --json
+```

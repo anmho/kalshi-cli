@@ -1,0 +1,64 @@
+---
+title: Trading Workflows
+---
+
+## Order Lifecycle
+
+Create:
+
+```bash
+kalshi orders create \
+  --ticker KX... \
+  --side yes \
+  --action buy \
+  --count 1 \
+  --yes-price 45
+```
+
+Amend:
+
+```bash
+kalshi orders amend ORDER_ID \
+  --ticker KX... \
+  --side yes \
+  --action buy \
+  --yes-price 47
+```
+
+Decrease or cancel:
+
+```bash
+kalshi orders decrease ORDER_ID --reduce-by 1
+kalshi orders cancel ORDER_ID
+```
+
+Queue monitoring:
+
+```bash
+kalshi orders queue-position ORDER_ID
+kalshi orders queue-positions --market-tickers KX...
+```
+
+## Portfolio Tracking
+
+```bash
+kalshi portfolio balance
+kalshi portfolio positions --limit 50
+kalshi portfolio fills --limit 50
+kalshi portfolio settlements --limit 50
+```
+
+## Subaccounts
+
+```bash
+kalshi portfolio subaccounts create
+kalshi portfolio subaccounts balances
+kalshi portfolio subaccounts transfers list --limit 50
+kalshi portfolio subaccounts netting get
+```
+
+## Official Docs Backlinks
+
+- Auth + signing: [API keys guide](https://docs.kalshi.com/getting_started/api_keys)
+- TS SDK quickstart: [TypeScript quickstart](https://docs.kalshi.com/sdks/typescript/quickstart)
+- Full API docs: [docs.kalshi.com](https://docs.kalshi.com/)

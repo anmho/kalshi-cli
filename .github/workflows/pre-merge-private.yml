@@ -1,0 +1,40 @@
+name: Pre-Merge Private
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  private-checks:
+    runs-on: ubuntu-latest
+    env:
+      KALSHI_API_KEY_ID: ${{ secrets.KALSHI_API_KEY_ID }}
+      KALSHI_PRIVATE_KEY_PEM: ${{ secrets.KALSHI_PRIVATE_KEY_PEM }}
+      KALSHI_BASE_URL: ${{ secrets.KALSHI_BASE_URL }}
+      KALSHI_TIMEOUT_MS: ${{ secrets.KALSHI_TIMEOUT_MS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate private test secrets
+        run: |
+          if [ -z "$KALSHI_API_KEY_ID" ]; then
+            echo "Missing required secret: KALSHI_API_KEY_ID"
+            exit 1
+          fi
+          if [ -z "$KALSHI_PRIVATE_KEY_PEM" ]; then
+            echo "Missing required secret: KALSHI_PRIVATE_KEY_PEM"
+            exit 1
+          fi
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Private command smoke tests
+        run: bun run test:commands:private

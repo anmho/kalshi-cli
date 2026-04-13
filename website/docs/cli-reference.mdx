@@ -1,0 +1,37 @@
+---
+title: CLI Reference
+---
+
+Each command group maps to Kalshi API resources, and each command help string includes the mapped endpoint.
+
+## Command Groups
+
+- `config`: local config read/write
+- `doctor`: config + connectivity checks
+- `ping`: exchange status health check
+- `exchange`: status, schedule, announcements
+- `events`: list/get
+- `markets`: list/get/orderbook/trades
+- `orders`: list/get/create/cancel/amend/decrease/queue/batch
+- `portfolio`: balance/positions/fills/settlements/resting-order-value/subaccounts
+- `account`: API limits
+
+## Examples
+
+```bash
+kalshi events list --status open --limit 20
+kalshi markets get KX...
+kalshi orders queue-position ORDER_ID
+kalshi portfolio settlements --limit 20
+kalshi portfolio subaccounts balances
+```
+
+## Authenticated Write Commands
+
+For complex payloads use JSON input:
+
+```bash
+kalshi orders batch-create --file orders-batch.json
+kalshi orders batch-cancel --body '{"order_ids":["..."]}'
+kalshi portfolio subaccounts transfers create --file transfer.json
+```

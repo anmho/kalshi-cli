@@ -1,0 +1,41 @@
+name: Pre-Merge Public
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  public-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run check
+
+      - name: Build CLI
+        run: bun run build
+
+      - name: Public command smoke tests
+        run: bun run test:commands
+
+      - name: Install docs dependencies
+        run: npm --prefix website ci
+
+      - name: Validate docs build
+        run: bun run docs:validate
