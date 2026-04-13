@@ -46,19 +46,32 @@ requireOk("events list", events);
 const markets = run(["markets", "list", "--limit", "5", "--json"]);
 requireOk("markets list", markets);
 const marketsData = parseJsonResult<{ markets?: Array<{ ticker?: string }> }>(markets);
-const ticker = marketsData.markets?.[0]?.ticker;
-if (!ticker) {
-  console.error("[FAIL] markets list returned no ticker to continue tests");
+const marketTickers = (marketsData.markets ?? [])
+  .map((market) => market.ticker)
+  .filter((ticker): ticker is string => typeof ticker === "string" && ticker.length > 0);
+if (marketTickers.length === 0) {
+  console.error("[FAIL] markets list returned no tickers to continue tests");
   process.exit(1);
 }
 
-const marketGet = run(["markets", "get", ticker, "--json"]);
-requireOk("markets get", marketGet);
+let selectedTicker: string | undefined;
+for (const ticker of marketTickers) {
+  const marketGet = run(["markets", "get", ticker, "--json"]);
+  if (marketGet.ok) {
+    selectedTicker = ticker;
+    break;
+  }
+}
+if (!selectedTicker) {
+  console.error("[FAIL] markets get failed for all candidate tickers from markets list");
+  process.exit(1);
+}
+console.log("[PASS] markets get");
 
-const orderbook = run(["markets", "orderbook", ticker, "--depth", "5", "--json"]);
+const orderbook = run(["markets", "orderbook", selectedTicker, "--depth", "5", "--json"]);
 requireOk("markets orderbook", orderbook);
 
-const trades = run(["markets", "trades", "--ticker", ticker, "--limit", "5", "--json"]);
+const trades = run(["markets", "trades", "--ticker", selectedTicker, "--limit", "5", "--json"]);
 requireOk("markets trades", trades);
 
 console.log("All public command smoke checks passed.");

@@ -22,4 +22,6 @@ export interface OutputOptions {
 export interface CommandOverrides extends CliConfig {
   config?: string;
   verbose?: boolean;
+  output?: OutputFormat;
+  json?: boolean;
 }

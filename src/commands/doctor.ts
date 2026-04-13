@@ -1,7 +1,9 @@
 import type { Command } from "commander";
+import { addGlobalOptions } from "~/lib/cli-helpers.js";
 import { loadConfig } from "~/lib/config.js";
 import { KalshiClient } from "~/lib/kalshi/client.js";
-import { printKeyValue, printTableRows } from "~/lib/output.js";
+import { printJson, printKeyValue, printTableRows } from "~/lib/output.js";
+import type { CommandOverrides } from "~/lib/types.js";
 
 type Check = {
   status: "pass" | "warn" | "fail";
@@ -10,8 +12,12 @@ type Check = {
 };
 
 export function registerDoctorCommands(program: Command): void {
-  program.command("doctor").description("Validate configuration and API reachability").action(async () => {
-    const context = await loadConfig({});
+  addGlobalOptions(program.command("doctor").description("Validate configuration and API reachability")).action(
+    async (_options, command) => {
+      const opts = command.optsWithGlobals() as CommandOverrides;
+      const context = await loadConfig(opts);
+      const json = opts.json === true || opts.output === "json";
+      const wide = !json && opts.output === "wide";
     const checks: Check[] = [];
 
     checks.push({
@@ -40,40 +46,49 @@ export function registerDoctorCommands(program: Command): void {
       detail: String(context.config.timeoutMs ?? "Not configured"),
     });
 
-    const client = new KalshiClient({
-      baseUrl: context.config.baseUrl,
-      timeoutMs: context.config.timeoutMs,
-      apiKeyId: context.config.apiKeyId,
-      privateKeyPath: context.config.privateKeyPath,
-      privateKeyPem: context.config.privateKeyPem,
-    });
-
-    try {
-      const status = await client.call("GET /exchange/status", () => client.exchange.getExchangeStatus());
-      checks.push({
-        status: "pass",
-        check: "public_api",
-        detail: `Reachable (${Object.keys(status as object).join(", ")})`,
+      const client = new KalshiClient({
+        baseUrl: context.config.baseUrl,
+        timeoutMs: context.config.timeoutMs,
+        apiKeyId: context.config.apiKeyId,
+        privateKeyPath: context.config.privateKeyPath,
+        privateKeyPem: context.config.privateKeyPem,
+        verbose: opts.verbose ?? process.env.KALSHI_VERBOSE === "1",
       });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Request failed";
-      checks.push({
-        status: "fail",
-        check: "public_api",
-        detail: message,
-      });
-    }
 
-    printTableRows(checks, [
-      { name: "status", value: (check) => check.status.toUpperCase(), maxWidth: 6 },
-      { name: "check", value: (check) => check.check, maxWidth: 16 },
-      { name: "detail", value: (check) => check.detail, maxWidth: 80 },
-    ]);
+      try {
+        const status = await client.call("GET /exchange/status", () => client.exchange.getExchangeStatus());
+        checks.push({
+          status: "pass",
+          check: "public_api",
+          detail: `Reachable (${Object.keys(status as object).join(", ")})`,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Request failed";
+        checks.push({
+          status: "fail",
+          check: "public_api",
+          detail: message,
+        });
+      }
 
-    console.log("");
-    printKeyValue({
-      config_path: context.configPath,
-      has_auth_credentials: client.hasAuth(),
-    });
-  });
+      const summary = {
+        config_path: context.configPath,
+        has_auth_credentials: client.hasAuth(),
+      };
+
+      if (json) {
+        printJson({ ok: true, data: { checks, summary } });
+        return;
+      }
+
+      printTableRows(checks, [
+        { name: "status", value: (check) => check.status.toUpperCase(), maxWidth: 6 },
+        { name: "check", value: (check) => check.check, maxWidth: 16 },
+        { name: "detail", value: (check) => check.detail, maxWidth: wide ? 140 : 80 },
+      ]);
+
+      console.log("");
+      printKeyValue(summary);
+    },
+  );
 }
