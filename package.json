@@ -1,6 +1,6 @@
 {
   "name": "@anmho/kalshi-cli",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Curated terminal-first CLI for Kalshi using the official TypeScript SDK",
   "license": "MIT",
   "repository": {
