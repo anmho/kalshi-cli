@@ -1,7 +1,16 @@
 {
-  "name": "kalshi-cli",
-  "version": "0.2.0",
+  "name": "@anmho/kalshi-cli",
+  "version": "0.2.1",
   "description": "Curated terminal-first CLI for Kalshi using the official TypeScript SDK",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anmho/kalshi-cli.git"
+  },
+  "homepage": "https://github.com/anmho/kalshi-cli#readme",
+  "bugs": {
+    "url": "https://github.com/anmho/kalshi-cli/issues"
+  },
   "type": "module",
   "bin": {
     "kalshi": "dist/index.js"
@@ -24,7 +33,7 @@
     "docs:dev": "npm --prefix website run start",
     "docs:build": "npm --prefix website run build",
     "docs:validate": "npm --prefix website run build",
-    "release": "bun run check && bun run build && npm publish --cache /tmp/npm-cache"
+    "release": "bun run check && bun run build && npm publish --access public --cache /tmp/npm-cache"
   },
   "devDependencies": {
     "@types/bun": "^1.3.12",

@@ -1,4 +1,4 @@
-name: Release
+name: Publish
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
       - "v*"
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -62,6 +62,4 @@ jobs:
 
       - name: Publish package
         if: ${{ github.event_name == 'push' || github.event.inputs.publish == 'true' }}
-        run: npm publish --cache /tmp/npm-cache
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --cache /tmp/npm-cache

@@ -2,6 +2,8 @@
 
 Terminal-first Kalshi CLI built on the official TypeScript SDK (`kalshi-typescript`).
 
+npm package: `@anmho/kalshi-cli`
+
 Official references:
 
 - Kalshi docs: <https://docs.kalshi.com/>
@@ -26,6 +28,13 @@ Install globally on your machine:
 
 ```bash
 bun run install:system
+kalshi --help
+```
+
+Install from npm:
+
+```bash
+npm install -g @anmho/kalshi-cli
 kalshi --help
 ```
 
