@@ -4,6 +4,7 @@ const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     "index",
     "quickstart",
+    "authentication",
     "cli-reference",
     "trading-workflows",
     {

@@ -60,7 +60,8 @@ const config: Config = {
     navbar: {
       title: "Kalshi CLI",
       items: [
-        { to: "/", label: "Docs", position: "left" },
+        { to: "/quickstart", label: "Quickstart", position: "left" },
+        { to: "/authentication", label: "Authentication", position: "left" },
         { to: "/category/api-reference", label: "API Reference", position: "left" },
         { href: "https://docs.kalshi.com/", label: "Official Kalshi Docs", position: "right" },
         { href: "https://github.com/anmho/kalshi-cli", label: "GitHub", position: "right" },
@@ -73,6 +74,7 @@ const config: Config = {
           title: "CLI",
           items: [
             { label: "Quickstart", to: "/quickstart" },
+            { label: "Authentication", to: "/authentication" },
             { label: "Commands", to: "/cli-reference" },
             { label: "Trading Workflows", to: "/trading-workflows" },
           ],

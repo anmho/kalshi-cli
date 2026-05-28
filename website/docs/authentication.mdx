@@ -1,0 +1,77 @@
+---
+title: Authentication
+---
+
+Kalshi CLI uses Kalshi's API key flow: API Key ID plus RSA private key signing.
+
+Official Kalshi references:
+
+- [API keys guide](https://docs.kalshi.com/getting_started/api_keys)
+- [TypeScript SDK quickstart](https://docs.kalshi.com/sdks/typescript/quickstart)
+
+## What You Need
+
+For authenticated commands, you need:
+
+1. `KALSHI_API_KEY_ID`
+2. a local PEM private key file, usually referenced with `KALSHI_PRIVATE_KEY_PATH`
+
+You can also provide the PEM inline with `KALSHI_PRIVATE_KEY_PEM`, but a file path is usually easier to manage locally.
+
+## Recommended Local Setup
+
+1. Create the API key in Kalshi using the official guide above.
+2. Save your private key PEM locally, for example at `~/.kalshi/kalshi-key.pem`.
+3. Configure the CLI with environment variables or `kalshi config`.
+
+Environment variables:
+
+```bash
+export KALSHI_API_KEY_ID="your-key-id"
+export KALSHI_PRIVATE_KEY_PATH="$HOME/.kalshi/kalshi-key.pem"
+export KALSHI_BASE_URL="https://api.elections.kalshi.com/trade-api/v2"
+export KALSHI_TIMEOUT_MS="10000"
+```
+
+Persisted CLI config:
+
+```bash
+kalshi config set apiKeyId your-key-id
+kalshi config set privateKeyPath "$HOME/.kalshi/kalshi-key.pem"
+kalshi config set baseUrl https://api.elections.kalshi.com/trade-api/v2
+kalshi config show
+```
+
+## Verify Credentials
+
+Run:
+
+```bash
+kalshi doctor
+```
+
+Then try an authenticated command:
+
+```bash
+kalshi account limits
+kalshi portfolio balance
+```
+
+## Vault Status
+
+This repo does not currently use Vault for Kalshi credentials.
+
+Today the supported paths are:
+
+- local `.env` or shell environment variables
+- local CLI config via `kalshi config set`
+- GitHub Actions secrets for the private smoke test workflow
+
+The private CI workflow reads:
+
+- `KALSHI_API_KEY_ID`
+- `KALSHI_PRIVATE_KEY_PEM`
+- `KALSHI_BASE_URL`
+- `KALSHI_TIMEOUT_MS`
+
+from GitHub Actions secrets, not Vault.

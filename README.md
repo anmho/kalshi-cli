@@ -13,34 +13,43 @@ Official references:
 
 ## Install
 
-```bash
-bun install
-bun run build
-```
-
-Local binary:
-
-```bash
-./dist/index.js --help
-```
-
-Install globally on your machine:
-
-```bash
-bun run install:system
-kalshi --help
-```
-
-Install from npm:
+Recommended install for normal usage:
 
 ```bash
 npm install -g @anmho/kalshi-cli
 kalshi --help
 ```
 
+This installs the package `@anmho/kalshi-cli` globally and exposes the command as `kalshi`.
+
+Install from source if you are developing on the CLI itself:
+
+```bash
+bun install
+bun run build
+./dist/index.js --help
+```
+
+Or link your local checkout as the `kalshi` command:
+
+```bash
+bun run install:system
+kalshi --help
+```
+
 ## Authentication
 
-Kalshi API auth uses API Key ID + RSA private key signing (no OAuth in current official docs).
+Kalshi API auth uses an API Key ID plus RSA private key signing. Current official Kalshi docs do not use OAuth for this flow.
+
+Official setup guide:
+
+- Kalshi API keys page: <https://docs.kalshi.com/getting_started/api_keys>
+
+Recommended local setup:
+
+1. Generate an API key in the Kalshi dashboard/docs flow above.
+2. Save the private key PEM somewhere local, for example: `~/.kalshi/kalshi-key.pem`
+3. Provide the key ID and PEM path to the CLI using environment variables or `kalshi config set`
 
 Local `.env` (recommended for development):
 
@@ -57,7 +66,7 @@ export KALSHI_BASE_URL="https://api.elections.kalshi.com/trade-api/v2"
 export KALSHI_TIMEOUT_MS="10000"
 ```
 
-Or persist in CLI config:
+Or persist those values in CLI config:
 
 ```bash
 kalshi config set apiKeyId your-key-id
@@ -67,6 +76,23 @@ kalshi config show
 ```
 
 Precedence: `CLI flags > environment (.env) > config file > defaults`.
+
+Verify your setup before using private endpoints:
+
+```bash
+kalshi doctor
+```
+
+## Vault / Secret Storage
+
+This repo does not currently load Kalshi credentials from Vault.
+
+Current secret handling in-repo:
+
+- local development: `.env`, shell env vars, or `kalshi config set`
+- private CI smoke tests: GitHub Actions secrets in `.github/workflows/pre-merge-private.yml`
+
+There is no checked-in Vault integration for `KALSHI_API_KEY_ID` or the private key today.
 
 ## Quickstart
 
@@ -82,6 +108,7 @@ kalshi markets list --limit 10
 Private endpoints (credentials required):
 
 ```bash
+kalshi doctor
 kalshi portfolio balance
 kalshi orders list --limit 20
 kalshi account limits

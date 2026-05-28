@@ -11,10 +11,32 @@ title: Kalshi CLI
 ## Start Here
 
 1. [Quickstart](./quickstart)
-2. [CLI Reference](./cli-reference)
-3. [Trading Workflows](./trading-workflows)
+2. [Authentication](./authentication)
+3. [CLI Reference](./cli-reference)
+4. [Trading Workflows](./trading-workflows)
+
+## Recommended Install
+
+```bash
+npm install -g @anmho/kalshi-cli
+kalshi --help
+```
+
+The package name is scoped, but the executable is still `kalshi`.
+
+## Auth At A Glance
+
+Authenticated commands need:
+
+- `KALSHI_API_KEY_ID`
+- `KALSHI_PRIVATE_KEY_PATH` or `KALSHI_PRIVATE_KEY_PEM`
+
+Start with Kalshi's official API key guide:
+
+- [Kalshi API keys guide](https://docs.kalshi.com/getting_started/api_keys)
 
 ## External References
 
 - Official Kalshi docs: [docs.kalshi.com](https://docs.kalshi.com/)
+- Official API keys/auth guide: [Kalshi API keys](https://docs.kalshi.com/getting_started/api_keys)
 - Official TypeScript SDK quickstart: [Kalshi TS SDK quickstart](https://docs.kalshi.com/sdks/typescript/quickstart)

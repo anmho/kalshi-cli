@@ -4,9 +4,21 @@ title: Quickstart
 
 ## Install
 
+Recommended install:
+
+```bash
+npm install -g @anmho/kalshi-cli
+kalshi --help
+```
+
+The npm package name is `@anmho/kalshi-cli`, but the command on your system is `kalshi`.
+
+Build from source if you are developing on this repo:
+
 ```bash
 bun install
 bun run build
+./dist/index.js --help
 ```
 
 Optional system install:
@@ -16,9 +28,13 @@ bun run install:system
 kalshi --help
 ```
 
-## Local Auth Setup (`.env`)
+## Authentication Setup
 
-Create `.env` from `.env.example`:
+Kalshi API auth uses an API Key ID plus RSA private key signing.
+
+- Official API key docs: [Kalshi API keys guide](https://docs.kalshi.com/getting_started/api_keys)
+
+Create `.env` from `.env.example` if you want local development defaults:
 
 ```bash
 cp .env.example .env
@@ -38,6 +54,20 @@ KALSHI_BASE_URL=https://api.elections.kalshi.com/trade-api/v2
 KALSHI_TIMEOUT_MS=10000
 ```
 
+Or persist config in the CLI:
+
+```bash
+kalshi config set apiKeyId your-key-id
+kalshi config set privateKeyPath "$HOME/.kalshi/kalshi-key.pem"
+kalshi config show
+```
+
+Sanity check your setup:
+
+```bash
+kalshi doctor
+```
+
 ## First Commands
 
 Public:
@@ -50,10 +80,21 @@ kalshi markets list --limit 10
 Private:
 
 ```bash
+kalshi doctor
 kalshi account limits
 kalshi portfolio balance
 kalshi orders list --limit 20
 ```
+
+## Vault Status
+
+This repo does not currently fetch Kalshi credentials from Vault.
+
+Current secret sources are:
+
+- local `.env` / shell env vars
+- local `kalshi config`
+- GitHub Actions secrets for the private CI workflow
 
 ## Output Modes
 
